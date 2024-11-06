@@ -1,10 +1,9 @@
-import { Button } from '@/components/ui/button'
-import React from 'react'
+import FormRegister from '@/components/form-register'
 
 const RegisterPage = () => {
   return (
     <div>
-      <Button>Hola</Button>
+      <FormRegister />
     </div>
   )
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { loginSchema } from '@/lib/zod'
+import { registerSchema } from '@/lib/zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -17,24 +17,25 @@ import {
 import { Input } from '@/components/ui/input'
 // import { signIn } from '@/auth'
 // import { signIn } from 'next-auth/react'
-import { loginAction } from '@/actions/auth-action'
+import { registerAction } from '@/actions/auth-action'
 import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 
-const FormLogin = () => {
+const FormRegister = () => {
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
 
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       email: '',
-      password: ''
+      password: '',
+      name: ''
     }
   })
 
-  async function onSubmit(values: z.infer<typeof loginSchema>) {
+  async function onSubmit(values: z.infer<typeof registerSchema>) {
     setError(null)
     startTransition(async () => {
       // await signIn('credentials', {
@@ -42,7 +43,7 @@ const FormLogin = () => {
       //   password: values.password,
       //   redirect: false
       // })
-      const response = await loginAction(values)
+      const response = await registerAction(values)
       if (response.error) {
         setError(response.error)
       } else {
@@ -53,7 +54,7 @@ const FormLogin = () => {
 
   return (
     <div className="max-w-52">
-      <h1 className="font-bold">Login</h1>
+      <h1 className="font-bold">Register</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
@@ -64,6 +65,20 @@ const FormLogin = () => {
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input type="email" placeholder="email" {...field} />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input type="text" placeholder="name" {...field} />
                 </FormControl>
 
                 <FormMessage />
@@ -94,4 +109,4 @@ const FormLogin = () => {
   )
 }
 
-export default FormLogin
+export default FormRegister
